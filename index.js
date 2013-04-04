@@ -41,7 +41,7 @@ var index = function(should_render, purge_session, with_string) {
         delete req.session.messages; // *perf.1: obj del fast
     }
 
-    // Add message to session. Update locals. 
+    // Add message to session. Update locals.
     function createAlert(category, alert_message) {
       var ret_val;
 
@@ -66,6 +66,7 @@ var index = function(should_render, purge_session, with_string) {
     req.alert = function(category, alert_message) {
       return createAlert(category, alert_message);
     }
+    req.flash = req.alert
 
     // Helper - Info
     req.info = function(alert_message) {
@@ -91,11 +92,11 @@ var index = function(should_render, purge_session, with_string) {
       var len = messages.length;
       var rendered = '';
 
-      if (!len) 
+      if (!len)
         return divStart + divEnd;
 
       rendered+=(divStart);
-      
+
       while (len) {
         index = --len; // *perf.3,4: reverse faster
         var category = messages[index][0]; // *perf.1: array faster
@@ -105,14 +106,14 @@ var index = function(should_render, purge_session, with_string) {
         rendered+=(alert_message);
         rendered+=('</div>');
       }
-      
+
       rendered+=(divEnd);
       return rendered;
     }
 
     if(should_render) // Supply convenience method for user
       res.locals.rmessages = renderMessages.bind(this, res.locals.messages);
-    
+
     next();
   }
 }
